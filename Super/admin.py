@@ -8,4 +8,5 @@ admin.site.register(Vendedor)
 admin.site.register(Venta)
 admin.site.register(VentaDetalle)
 admin.site.register(Producto)
+admin.site.register(User)
 

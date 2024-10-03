@@ -2,9 +2,48 @@ from datetime import datetime
 from decimal import Decimal
 from django.db import models
 from django.forms import model_to_dict
-from django.contrib.auth.models import User
 from SisSuper import utils
 from django.contrib.auth.models import AbstractUser
+
+class User(AbstractUser):
+    iduser = models.AutoField(primary_key=True, blank=False, null=False, verbose_name='Código')
+    dni = models.CharField(verbose_name='Cédula o RUC', max_length=13, blank=True, null=True)
+    image = models.ImageField(
+        verbose_name='Archive image',
+        upload_to='users',
+        max_length=1024,
+        blank=True,
+        null=True
+    )
+    email = models.EmailField('Email', unique=True)
+    direction = models.CharField('Dirección', max_length=200, blank=True, null=True)
+    phone = models.CharField('Teléfono', max_length=50, blank=True, null=True)
+
+    # Sobrescribimos groups y user_permissions con None para eliminarlos
+    groups = None
+    user_permissions = None
+
+    USERNAME_FIELD = "email"  # cambiar el login al email
+    REQUIRED_FIELDS = ["username", "first_name", "last_name"]
+
+    class Meta:
+        verbose_name = "Usuario"
+        verbose_name_plural = "Usuarios"
+        ordering = ['iduser']
+
+    def __str__(self):
+        return '{}'.format(self.username)
+
+    @property
+    def get_full_name(self):
+        return f"{self.first_name} {self.last_name}"
+
+    def get_short_name(self):
+        return self.username
+
+    def get_image_url(self):
+        return utils.get_image(self.image)
+
 
 class Marca(models.Model):
     idmarca = models.AutoField(primary_key=True, verbose_name='Código')
@@ -69,7 +108,7 @@ class Cliente(models.Model):
                               null=False,  # Mejor manejarlo como cadena vacía en lugar de NULL
                               verbose_name='Género')
     
-    user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True, verbose_name='Usuario') 
+    user = models.ForeignKey(User, on_delete=models.PROTECT, blank=True, null=True, verbose_name='Usuario') 
 
     @property
     def id(self):
@@ -106,7 +145,7 @@ class Vendedor(models.Model):
                               null=False,  # Igual que en Cliente
                               verbose_name='Género') 
     
-    user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True, verbose_name='Usuario')
+    user = models.ForeignKey(User, on_delete=models.PROTECT, blank=True, null=True, verbose_name='Usuario')
 
     @property
     def id(self):
@@ -226,44 +265,5 @@ class VentaDetalle(models.Model):
         
         ordering = ['iddetalle', 'venta', 'producto']
 
-
-class User(AbstractUser):
-    iduser = models.AutoField(primary_key=True, blank=False, null=False, verbose_name='Código')
-    dni = models.CharField(verbose_name='Cédula o RUC', max_length=13, blank=True, null=True)
-    image = models.ImageField(
-        verbose_name='Archive image',
-        upload_to='users',
-        max_length=1024,
-        blank=True,
-        null=True
-    )
-    email = models.EmailField('Email', unique=True)
-    direction = models.CharField('Dirección', max_length=200, blank=True, null=True)
-    phone = models.CharField('Teléfono', max_length=50, blank=True, null=True)
-
-    # Sobrescribimos groups y user_permissions con None para eliminarlos
-    groups = None
-    user_permissions = None
-
-    USERNAME_FIELD = "email"  # cambiar el login al email
-    REQUIRED_FIELDS = ["username", "first_name", "last_name"]
-
-    class Meta:
-        verbose_name = "Usuario"
-        verbose_name_plural = "Usuarios"
-        ordering = ['iduser']
-
-    def __str__(self):
-        return '{}'.format(self.username)
-
-    @property
-    def get_full_name(self):
-        return f"{self.first_name} {self.last_name}"
-
-    def get_short_name(self):
-        return self.username
-
-    def get_image_url(self):
-        return utils.get_image(self.image)
 
 
