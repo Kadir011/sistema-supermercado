@@ -53,7 +53,7 @@ class VentaCreateView(LoginRequiredMixin, CreateView):
         form = self.get_form() 
 
         if not form.is_valid():
-            return JsonResponse({'errors': form.errors}, status=400) 
+            return JsonResponse({'errors': form.errors, 'form_data': request.POST}, status=400) 
         
         data = request.POST 
         venta = form.save() 
@@ -89,7 +89,7 @@ class VentaUpdateView(LoginRequiredMixin, UpdateView):
     def post(self, request, *args, **kwargs):
         form = self.get_form()
         if not form.is_valid():
-            return JsonResponse({'errors': form.errors}, status=400) 
+            return JsonResponse({'errors': form.errors, 'form_data': request.POST}, status=400) 
         
         data = request.POST
         venta = form.save()
@@ -147,7 +147,12 @@ class VentaDetailView(LoginRequiredMixin, View):
 class VentaPDFView(LoginRequiredMixin, View): 
     def get(self, request, *args, **kwargs):
         idventa = self.kwargs.get('pk') 
-        venta = Venta.objects.get(pk=idventa)  
+        
+        try:
+            venta = Venta.objects.get(pk=idventa)  
+        except Venta.DoesNotExist:
+            return HttpResponse('Venta no encontrada', status=404)
+
         detalles = VentaDetalle.objects.filter(venta=venta)
 
         context = {
@@ -166,4 +171,9 @@ class VentaPDFView(LoginRequiredMixin, View):
         if pisa_status.err:
             return HttpResponse('Hubo un error al generar el PDF', status=500)
         return response
+
+
+
+
+
 
