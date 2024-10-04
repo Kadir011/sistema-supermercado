@@ -1,14 +1,9 @@
 from django.urls import path 
-from Super.views import home, ux, cliente, vendedor, producto, user
+from Super.views import ux, cliente, vendedor, producto, user
 
 
 app_name = 'Super'
 urlpatterns = []
-
-#url de home
-urlpatterns += [
-    path('', home.HomeView.as_view(), name='home')
-] 
 
 #urls de ux
 urlpatterns += [
@@ -49,5 +44,6 @@ urlpatterns += [
     path('users/update/<int:pk>', user.UserUpdateView.as_view(), name='user_update'),
     path('users/delete/<int:pk>', user.UserDeleteView.as_view(), name='user_delete') 
 ]
+
 
 
