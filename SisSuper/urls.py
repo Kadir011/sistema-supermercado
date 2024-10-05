@@ -18,12 +18,12 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf.urls.static import static
 from django.conf import settings
-from Super.views import home
+from Super.views import home, sections
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', home.HomeView.as_view(), name='home'),
+    path('secciones/', sections.SectionView.as_view(), name='section'),
     path('super/', include('Super.urls', namespace='Super'))
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-
 

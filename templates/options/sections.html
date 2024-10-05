@@ -1,0 +1,61 @@
+{% extends 'components/base.html' %}
+{% load static %}
+{% block title %}{{title}}{% endblock %}
+{% block content %}
+<section class="container py-5">
+    <div class="row">
+        <div class="col-12">
+            <h2 class="text-center mb-4">{{ title }}</h2>
+        </div>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-md-3 mb-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-body text-center">
+                    <img src="{% static 'img/icons/user_icon.png' %}" alt="Usuarios" class="mb-3">
+                    <h5 class="card-title">Usuarios</h5>
+                    <a href="{% url 'user_list' %}" class="btn btn-outline-primary">Ingresar</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-body text-center">
+                    <img src="{% static 'img/icons/customer_icon.png' %}" alt="Clientes" class="mb-3">
+                    <h5 class="card-title">Clientes</h5>
+                    <a href="{% url 'cliente_list' %}" class="btn btn-outline-primary">Ingresar</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-body text-center">
+                    <img src="{% static 'img/icons/seller_icon.png' %}" alt="Vendedores" class="mb-3">
+                    <h5 class="card-title">Vendedores</h5>
+                    <a href="{% url 'vendedor_list' %}" class="btn btn-outline-primary">Ingresar</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-body text-center">
+                    <img src="{% static 'img/icons/product_icon.png' %}" alt="Productos" class="mb-3">
+                    <h5 class="card-title">Productos</h5>
+                    <a href="{% url 'producto_list' %}" class="btn btn-outline-primary">Ingresar</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-body text-center">
+                    <img src="{% static 'img/icons/sales_icon.png' %}" alt="Ventas" class="mb-3">
+                    <h5 class="card-title">Ventas</h5>
+                    <a href="{% url 'venta_list' %}" class="btn btn-outline-primary">Ingresar</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock content %}
+
