@@ -15,5 +15,5 @@ class VentaForm(ModelForm):
         })
     class Meta:
         model = Venta 
-        fields = '__all__'
+        fields = ['cliente', 'vendedor', 'fecha', 'subtotal', 'iva', 'dscto', 'total']
 
