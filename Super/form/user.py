@@ -58,7 +58,6 @@ class MyPasswordChangeForm2(ModelForm):
             "old_password",
             "new_password1",
             "new_password2",
-
         ]
 
     def clean_old_password(self):
@@ -96,4 +95,5 @@ class MyPasswordChangeForm2(ModelForm):
             self.instance.save()
         return self.instance 
     
+
 
