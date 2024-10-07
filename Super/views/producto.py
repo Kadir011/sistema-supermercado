@@ -64,14 +64,8 @@ class ProductoEstadoDetailView(LoginRequiredMixin, DetailView):
             return redirect('Super:producto_list')
         except Exception as e:
             context = self.get_context_data()
-            context['error'] = f'Error al actualizar el estado del producto: {str(e)}'
+            context['error'] = str(e)
             return self.render_to_response(context)
-    
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['title'] = 'Estado de Producto'
-        context['error'] = ''
-        return context
     
 
 class ProductoDetailView(LoginRequiredMixin, DetailView):

@@ -4,7 +4,6 @@ from django.forms import ModelForm
 from Super.models import User
 from django.core.exceptions import ValidationError
 
-
 class UserForm(ModelForm):
     class Meta:
         model = User
@@ -18,10 +17,23 @@ class UserForm(ModelForm):
             "phone",
             "image"
         ]
+
     def __init__(self, *args, **kwargs):
         super(UserForm, self).__init__(*args, **kwargs)
-        # Guarda el valor actual del campo como valor inicial
-        self.fields['password'].initial = self.instance.password if self.instance else None
+        self.fields['password'].widget = forms.PasswordInput()  # Mostrar campo como input de contraseña
+
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+        if User.objects.filter(email=email).exists():
+            raise ValidationError("Este correo electrónico ya está en uso.")
+        return email
+
+    def save(self, commit=True):
+        user = super(UserForm, self).save(commit=False)
+        user.set_password(self.cleaned_data['password'])  # Hash de la contraseña
+        if commit:
+            user.save()
+        return user
 
 
 class MyPasswordChangeForm2(ModelForm):
@@ -29,7 +41,6 @@ class MyPasswordChangeForm2(ModelForm):
         "password_mismatch": "Los dos campos de contraseña no coincidieron.",
         "password_incorrect": "Tu contraseña anterior fue ingresada incorrectamente. Introdúcela nuevamente.",
     }
-
 
     old_password = forms.CharField(
         label="Old password",
@@ -61,9 +72,6 @@ class MyPasswordChangeForm2(ModelForm):
         ]
 
     def clean_old_password(self):
-        """
-        Validate that the old_password field is correct.
-        """
         old_password = self.cleaned_data["old_password"]
         if not self.instance.check_password(old_password):
             raise ValidationError(
@@ -71,11 +79,6 @@ class MyPasswordChangeForm2(ModelForm):
                 code="password_incorrect",
             )
         return old_password
-
-    """
-       A form that lets a user set their password without entering the old
-       password
-       """
 
     def clean_new_password2(self):
         password1 = self.cleaned_data.get("new_password1")
@@ -93,7 +96,6 @@ class MyPasswordChangeForm2(ModelForm):
         self.instance.set_password(password)
         if commit:
             self.instance.save()
-        return self.instance 
-    
+        return self.instance
 
 

@@ -1,5 +1,6 @@
 from django.forms import ModelForm
-from Super.models import Cliente 
+from django.core.exceptions import ValidationError
+from Super.models import Cliente
 
 class ClienteForm(ModelForm):
     class Meta:
@@ -11,4 +12,10 @@ class ClienteForm(ModelForm):
                   'telefono',
                   'fecha_nacimiento',
                   'genero']
-        
+
+    def clean_cedula(self):
+        cedula = self.cleaned_data.get('cedula')
+        if not cedula.isdigit() or len(cedula) != 10:  # Validación de cédula
+            raise ValidationError("La cédula debe tener 10 dígitos.")
+        return cedula
+

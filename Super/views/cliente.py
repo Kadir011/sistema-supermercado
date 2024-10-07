@@ -3,7 +3,6 @@ from Super.form.cliente import ClienteForm
 from Super.models import Cliente 
 from django.urls import reverse_lazy
 from django.db.models import Q
-from django.core.paginator import Paginator
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 class ClienteListView(LoginRequiredMixin, ListView):
@@ -16,14 +15,14 @@ class ClienteListView(LoginRequiredMixin, ListView):
         q = self.request.GET.get('q') 
         if q:
             return Cliente.objects.filter(
-                Q(user=self.request.user) & (Q(nombre__icontains=q)|
+                Q(user=self.request.user) & (Q(codigo__icontains=q)|
+                                             Q(nombre__icontains=q)|
                                              Q(apellido__icontains=q)|
                                              Q(cedula__icontains=q)|
                                              Q(telefono__icontains=q)|
                                              Q(fecha_nacimiento__icontains=q)|
                                              Q(genero__icontains=q)) 
             ) 
-        
         return Cliente.objects.filter(user=self.request.user).order_by('id')
     
     def get_context_data(self, **kwargs):
@@ -31,7 +30,6 @@ class ClienteListView(LoginRequiredMixin, ListView):
         context['title'] = 'Lista de Clientes'
         context['create_url'] = reverse_lazy('Super:cliente_create')
         return context 
-    
 
 class ClienteCreateView(LoginRequiredMixin, CreateView):
     model = Cliente 
@@ -49,7 +47,6 @@ class ClienteCreateView(LoginRequiredMixin, CreateView):
         context['grabar'] = 'Registrar Cliente'
         context['back_url'] = self.success_url
         return context 
-    
 
 class ClienteUpdateView(LoginRequiredMixin, UpdateView):
     model = Cliente
@@ -66,7 +63,6 @@ class ClienteUpdateView(LoginRequiredMixin, UpdateView):
         context['grabar'] = 'Editar Cliente'
         context['back_url'] = self.success_url 
         return context 
-    
 
 class ClienteDeleteView(LoginRequiredMixin, DeleteView):
     model = Cliente 
@@ -83,7 +79,4 @@ class ClienteDeleteView(LoginRequiredMixin, DeleteView):
         context['description'] = f'¿Desea eliminar al cliente N°{self.object.id}: {self.object.codigo} - {self.object.get_full_name()}?' 
         context['back_url'] = self.success_url
         return context 
-    
-
-
 
